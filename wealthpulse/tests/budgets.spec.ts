@@ -12,87 +12,96 @@ const CATEGORIES = [
   'Subscriptions',
 ];
 
-test.describe('Budgets', () => {
+// ════════════════════════════════════════════════════════════════════════════
+// SMOKE TESTS
+// Purpose : Verify the Budgets page is reachable, renders its core shell,
+//           and exposes the minimum UI needed for users to act.
+//           These must pass before any Black Box tests are meaningful.
+//           Run time: fast — no interactions beyond navigation.
+// ════════════════════════════════════════════════════════════════════════════
+test.describe('[Smoke] Budgets', () => {
   test.beforeEach(async ({ page }) => {
     const factory = new PageFactory(page);
-    const loginPage = factory.login();
-    await loginPage.goto();
-    await loginPage.loginAsDemo();
-
-    const budgetsPage = factory.budgets();
-    await budgetsPage.navigate();
+    await factory.login().goto();
+    await factory.login().loginAsDemo();
+    await factory.budgets().navigate();
   });
 
-  // ─── Test 1: Page loads and renders correctly ───────────────────────────────
-  test('navigates to Budgets page and renders the page heading', async ({ page }) => {
-    // Sidebar "Budgets" button should be active (emerald highlight)
+  test('Budgets page is reachable and the heading is visible', async ({ page }) => {
+    // Sidebar "Budgets" button becomes active (emerald highlight) after click
     await expect(
       page.getByRole('button', { name: /budgets/i })
     ).toHaveClass(/text-emerald-400/);
 
-    // Main page heading is visible
+    // Main page heading is rendered
     await expect(page.getByRole('heading', { name: 'Budgets' })).toBeVisible();
 
-    // Top bar header title reflects current page
+    // Top bar title confirms the active section
     await expect(page.locator('header h1')).toHaveText('budgets');
   });
 
-  // ─── Test 2: Summary cards render ───────────────────────────────────────────
-  test('displays Total Budget, Total Spent, and Remaining summary cards with values', async ({ page }) => {
-    // All three summary stat cards are visible
+  test('summary cards (Total Budget, Total Spent, Remaining) are present', async ({ page }) => {
     await expect(page.getByText('Total Budget')).toBeVisible();
     await expect(page.getByText('Total Spent')).toBeVisible();
     await expect(page.getByText('Remaining')).toBeVisible();
-
-    // Each card should contain a dollar-formatted value (e.g. "$4,350.00")
-    const dollarValues = page.locator('text=/\\$[\\d,]+\\.\\d{2}/');
-    await expect(dollarValues.first()).toBeVisible();
   });
 
-  // ─── Test 3: All 8 category cards are rendered ──────────────────────────────
-  test('renders all 8 budget category cards', async ({ page }) => {
+  test('all 8 budget category cards are rendered', async ({ page }) => {
     for (const category of CATEGORIES) {
       await expect(page.getByText(category).first()).toBeVisible();
     }
   });
+});
 
-  // ─── Test 4: Progress bars are visible on each category card ────────────────
-  test('displays a progress bar for each budget category card', async ({ page }) => {
-    // Each card has a progress track (bg-white/[0.06]) containing a fill div
+// ════════════════════════════════════════════════════════════════════════════
+// BLACK BOX TESTS
+// Purpose : Validate functional behavior from the user's perspective —
+//           data accuracy, visual state logic, and write interactions —
+//           without knowledge of internal implementation details.
+// ════════════════════════════════════════════════════════════════════════════
+test.describe('[Black Box] Budgets', () => {
+  test.beforeEach(async ({ page }) => {
+    const factory = new PageFactory(page);
+    await factory.login().goto();
+    await factory.login().loginAsDemo();
+    await factory.budgets().navigate();
+  });
+
+  test('summary cards display dollar-formatted values', async ({ page }) => {
+    // Each stat card should show a currency value like "$4,350.00"
+    const dollarValues = page.locator('text=/\\$[\\d,]+\\.\\d{2}/');
+    await expect(dollarValues.first()).toBeVisible();
+  });
+
+  test('each category card has a visible progress bar', async ({ page }) => {
+    // One progress track per category (8 total), each with a colored fill inside
     const progressTracks = page.locator('.rounded-full.bg-white\\/\\[0\\.06\\]');
-
-    // There should be one progress bar track per category (8 total)
     await expect(progressTracks).toHaveCount(8);
 
-    // Each track should contain a fill element (the colored bar)
     for (let i = 0; i < 8; i++) {
-      const fill = progressTracks.nth(i).locator('> div');
-      await expect(fill).toBeVisible();
+      await expect(progressTracks.nth(i).locator('> div')).toBeVisible();
     }
   });
 
-  // ─── Test 5: User can edit a budget amount inline ───────────────────────────
-  test('user can update a category budget amount and the card reflects the change', async ({ page }) => {
-    // Target the Housing card's budget input (first number input on the page)
+  test('user can edit a category budget amount and the card reflects the change', async ({ page }) => {
+    // Housing is always the first budget input on the page
     const housingInput = page.locator('input[type="number"]').first();
 
-    // Confirm the input is visible and editable
     await expect(housingInput).toBeVisible();
     await expect(housingInput).toBeEnabled();
 
-    // Read current value so we can change it
     const currentValue = await housingInput.inputValue();
     const newValue = String(Number(currentValue) + 500);
 
-    // Update the budget
+    // Clear and fill with the new amount, then commit
     await housingInput.click({ clickCount: 3 });
     await housingInput.fill(newValue);
     await housingInput.press('Tab');
 
-    // The input should now reflect the new value
+    // Input must persist the new value
     await expect(housingInput).toHaveValue(newValue);
 
-    // The percentage label on the card must also update (it should still be a number followed by %)
+    // Percentage label on the card must still show a valid "X%" string
     const percentageLabel = page
       .locator('.grid.grid-cols-1.sm\\:grid-cols-2 > div')
       .first()
