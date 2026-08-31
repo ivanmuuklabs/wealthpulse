@@ -83,3 +83,48 @@ test('clicking the Date column header toggles sort order', async ({ page }) => {
     expect(after).not.toEqual(before);
   }
 });
+
+// ─── Expenses — sort by Category column ───────────────────────────────────────
+
+// Clicking the Category header sorts rows alphabetically; a second click
+// reverses to Z→A order.
+test('clicking the Category column header sorts expenses alphabetically', async ({ page }) => {
+  const tableBody = page.locator('tbody');
+  await expect(tableBody).toBeVisible();
+
+  const categoryHeader = page
+    .locator('th')
+    .filter({ hasText: /category/i })
+    .first();
+  await expect(categoryHeader).toBeVisible();
+
+  // ── First click: descending (Z → A) ──────────────────────────────────────
+  await categoryHeader.click();
+
+  // Read the category badge text from each row (3rd column, index 2)
+  const catCells = page.locator('tbody tr td:nth-child(3)');
+  const descValues = await catCells.allTextContents();
+
+  // Expect at least one row
+  expect(descValues.length).toBeGreaterThan(0);
+
+  // Verify Z→A: each category text should be >= the next
+  for (let i = 0; i < descValues.length - 1; i++) {
+    expect(descValues[i].trim().localeCompare(descValues[i + 1].trim())).toBeGreaterThanOrEqual(0);
+  }
+
+  // ── Second click: ascending (A → Z) ──────────────────────────────────────
+  await categoryHeader.click();
+
+  const ascValues = await catCells.allTextContents();
+
+  // Verify A→Z: each category text should be <= the next
+  for (let i = 0; i < ascValues.length - 1; i++) {
+    expect(ascValues[i].trim().localeCompare(ascValues[i + 1].trim())).toBeLessThanOrEqual(0);
+  }
+
+  // The two sort orders should differ (assuming >1 distinct category)
+  if (descValues.length > 1) {
+    expect(ascValues).not.toEqual(descValues);
+  }
+});
