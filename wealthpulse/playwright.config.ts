@@ -4,7 +4,7 @@ export default defineConfig({
   testDir: './tests',
   timeout: 30_000,
   retries: 1,
-  reporter: [['list'], ['html']],
+  reporter: [['list'], ['html'], ['@muuktest/amikoo-reporter']],
   use: {
     baseURL: 'http://localhost:5173',
     headless: true,
