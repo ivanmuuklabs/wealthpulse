@@ -23,6 +23,7 @@
     "autoprefixer": "^10.4.20",
     "@types/react": "^18.3.3",
     "@playwright/test": "^1.44.0",
+    "@muuktest/amikoo-reporter": "latest",
     "typescript": "^5.4.5"
   }
 }
