@@ -357,8 +357,8 @@ function DashboardTab() {
 
       {/* KPI row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Monthly Income" value={fmt(MONTHLY_INCOME)} icon="💰" />
         <StatCard label="Total Spent" value={fmt(totalSpent)} sub={`${spentChange >= 0 ? "↑" : "↓"} ${Math.abs(spentChange).toFixed(1)}% vs last month`} positive={spentChange <= 0} icon="💸" />
+        <StatCard label="Monthly Income" value={fmt(MONTHLY_INCOME)} icon="💰" />
         <StatCard label="Net Savings" value={fmt(netSavings)} sub={selectedMonth > 0 ? `${netSavings >= prevSavings ? "↑" : "↓"} ${fmt(Math.abs(netSavings - prevSavings))}` : undefined} positive={netSavings > 0} icon="🏦" />
         <StatCard label="Transactions" value={monthTxns.length} sub={`across ${catData.length} categories`} icon="📊" />
       </div>
