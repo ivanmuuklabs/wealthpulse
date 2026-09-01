@@ -8,8 +8,8 @@ export class LoginPage {
   }
 
   async login(username: string, password: string) {
-    await this.page.getByPlaceholder('demo').fill(username);
-    await this.page.getByPlaceholder('demo123').fill(password);
+    await this.page.getByPlaceholder('demo', { exact: true }).fill(username);
+    await this.page.getByPlaceholder('demo123', { exact: true }).fill(password);
     await this.page.getByRole('button', { name: 'Sign In' }).click();
   }
 
