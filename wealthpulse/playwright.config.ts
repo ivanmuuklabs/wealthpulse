@@ -9,7 +9,7 @@ export default defineConfig({
     baseURL: 'http://localhost:5173',
     headless: true,
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    video: 'on',
   },
   projects: [
     {
