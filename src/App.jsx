@@ -40,9 +40,9 @@ function generateTransactions() {
   const ranges = { Housing:[1200,1800], Food:[8,120], Transport:[5,80], Entertainment:[10,60], Health:[15,200], Utilities:[30,150], Shopping:[15,250], Subscriptions:[8,50] };
   const txns = [];
   let id = 1;
-  // Generate for Jan, Feb, Mar 2026
-  [0,1,2].forEach(mi => {
-    const year = 2026, month = mi; // 0=Jan,1=Feb,2=Mar
+  // Generate for Jan, Feb, Mar, Apr 2026
+  [0,1,2,3].forEach(mi => {
+    const year = 2026, month = mi; // 0=Jan,1=Feb,2=Mar,3=Apr
     const daysInMonth = new Date(year, month+1, 0).getDate();
     // Each category gets a few transactions per month
     CATEGORIES.forEach(cat => {
@@ -539,7 +539,7 @@ function ExpensesTab() {
         <h2 className="text-2xl font-bold text-white" style={{fontFamily:"'Outfit', sans-serif"}}>Expenses</h2>
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex bg-white/[0.04] rounded-xl p-1 border border-white/[0.06]">
-            {[0,1,2].map(m => <MonthButton key={m} m={m} />)}
+            {[0,1,2,3].map(m => <MonthButton key={m} m={m} />)}
           </div>
           <button onClick={() => setShowForm(!showForm)}
             className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-500 transition shadow-lg shadow-emerald-600/20">
