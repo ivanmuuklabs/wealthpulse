@@ -63,7 +63,7 @@ test.describe('Login — error and edge-case flows', () => {
     // Submit via Enter instead of clicking the Sign In button
     await loginPage.loginViaEnterKey('demo', 'demo123');
 
-    // Should land on the Dashboard
+    // Should land on the Charts (dashboard) section
     await expect(page.getByRole('heading', { name: 'Overview' })).toBeVisible();
   });
 
