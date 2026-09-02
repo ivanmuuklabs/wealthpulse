@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { PageFactory } from './pages/PageFactory';
 
-test('successful login with demo/demo123 lands on Dashboard', async ({ page }) => {
+test('successful login with demo/demo123 lands on the Charts (dashboard) section', async ({ page }) => {
   const factory = new PageFactory(page);
 
   const loginPage = factory.login();
