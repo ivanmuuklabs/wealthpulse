@@ -39,8 +39,8 @@ test.describe('Sidebar navigation — Dashboard label', () => {
   });
 
   test('navigating away and back to Dashboard restores the active state', async ({ page }) => {
-    // Go to Expenses
-    await page.getByRole('button', { name: 'Expenses' }).click();
+    // Go to Waste
+    await page.getByRole('button', { name: 'Waste' }).click();
     const dashboardButton = page.getByRole('button', { name: 'Dashboard' });
 
     // Dashboard button should no longer be the active item
