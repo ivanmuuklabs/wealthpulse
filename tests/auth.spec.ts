@@ -8,8 +8,8 @@ test('successful login with demo/demo123 lands on the Charts (dashboard) section
   await loginPage.goto();
   await loginPage.loginAsDemo();
 
-  // Sidebar shows the Dashboard item as active
-  await expect(page.getByRole('button', { name: /dashboard/i })).toHaveClass(/text-emerald-400/);
+  // Sidebar shows the Charts item (formerly "Dashboard") as active
+  await expect(page.getByRole('button', { name: /charts/i })).toHaveClass(/text-emerald-400/);
 
   // Main heading confirms we are on the Overview page
   await expect(page.getByRole('heading', { name: 'Overview' })).toBeVisible();
