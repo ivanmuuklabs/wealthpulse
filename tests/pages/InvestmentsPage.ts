@@ -8,8 +8,14 @@ export class InvestmentsPage {
   readonly comparisonChart: Locator;
   readonly calculatorAmountInput: Locator;
   readonly calculatorYAxisTicks: Locator;
+  /** The time-horizon range slider on the Calculator sub-tab. */
+  readonly calculatorTimeHorizonSlider: Locator;
+  /** The area chart rendered by the Calculator sub-tab. */
+  readonly calculatorAreaChart: Locator;
   readonly portfolioSliders: Locator;
   readonly portfolioTotalLabel: Locator;
+  /** The donut (pie) chart on the Portfolio Builder sub-tab. */
+  readonly portfolioDonutChart: Locator;
 
   constructor(private page: Page) {
     this.fundCards = page.locator('.grid > div').filter({ hasText: /Expense Ratio/ });
@@ -19,8 +25,11 @@ export class InvestmentsPage {
     this.comparisonChart = page.locator('.recharts-line-chart');
     this.calculatorAmountInput = page.getByLabel('Investment ($)');
     this.calculatorYAxisTicks = page.locator('.recharts-yAxis .recharts-cartesian-axis-tick-value');
+    this.calculatorTimeHorizonSlider = page.getByLabel('Time Horizon (years)');
+    this.calculatorAreaChart = page.locator('.recharts-area-chart');
     this.portfolioSliders = page.locator('input[type="range"]');
     this.portfolioTotalLabel = page.locator('text=/Total:/');
+    this.portfolioDonutChart = page.locator('.recharts-pie-chart');
   }
 
   async navigate() {
