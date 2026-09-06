@@ -40,7 +40,7 @@ test.describe('Budgets', () => {
     const currentValue = parseFloat(currentValueStr) || 0;
     const newValue = currentValue + 500;
 
-    await housingInput.triple_click?.() ?? await housingInput.click({ clickCount: 3 });
+    await housingInput.click({ clickCount: 3 });
     await housingInput.fill(String(newValue));
     // Trigger the change event so React state updates
     await housingInput.press('Tab');
