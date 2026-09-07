@@ -17,6 +17,10 @@ export class PageFactory {
     return new InvestmentsPage(this.page);
   }
 
+  dashboard(): DashboardPage {
+    return new DashboardPage(this.page);
+  }
+
   expenses(): ExpensesPage {
     return new ExpensesPage(this.page);
   }
