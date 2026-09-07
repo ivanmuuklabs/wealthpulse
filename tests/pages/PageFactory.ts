@@ -1,6 +1,7 @@
 import { Page } from '@playwright/test';
 import { LoginPage } from './LoginPage';
 import { InvestmentsPage } from './InvestmentsPage';
+import { DashboardPage } from './DashboardPage';
 import { ExpensesPage } from './ExpensesPage';
 import { BudgetsPage } from './BudgetsPage';
 import { SettingsPage } from './SettingsPage';
