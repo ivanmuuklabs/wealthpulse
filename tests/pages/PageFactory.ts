@@ -3,6 +3,7 @@ import { LoginPage } from './LoginPage';
 import { InvestmentsPage } from './InvestmentsPage';
 import { ExpensesPage } from './ExpensesPage';
 import { SettingsPage } from './SettingsPage';
+import { DashboardPage } from './DashboardPage';
 
 export class PageFactory {
   constructor(private page: Page) {}
@@ -21,5 +22,9 @@ export class PageFactory {
 
   settings(): SettingsPage {
     return new SettingsPage(this.page);
+  }
+
+  dashboard(): DashboardPage {
+    return new DashboardPage(this.page);
   }
 }
