@@ -24,4 +24,12 @@ export class PageFactory {
   settings(): SettingsPage {
     return new SettingsPage(this.page);
   }
+
+  dashboard(): DashboardPage {
+    return new DashboardPage(this.page);
+  }
+
+  budgets(): BudgetsPage {
+    return new BudgetsPage(this.page);
+  }
 }
