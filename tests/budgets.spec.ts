@@ -39,7 +39,6 @@ test.describe('Budgets — interactive editing and filtering', () => {
     const currentVal = await spinbutton.inputValue();
     const newVal = String(parseInt(currentVal, 10) + 500);
 
-    await spinbutton.triple_click();
     await spinbutton.fill(newVal);
     await spinbutton.press('Tab'); // commit the change
 
