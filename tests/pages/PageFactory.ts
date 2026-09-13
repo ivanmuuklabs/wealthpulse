@@ -4,6 +4,7 @@ import { InvestmentsPage } from './InvestmentsPage';
 import { DashboardPage } from './DashboardPage';
 import { ExpensesPage } from './ExpensesPage';
 import { SettingsPage } from './SettingsPage';
+import { BudgetsPage } from './BudgetsPage';
 
 export class PageFactory {
   constructor(private page: Page) {}
