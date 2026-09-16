@@ -11,6 +11,11 @@ export class InvestmentsPage {
   readonly portfolioSliders: Locator;
   readonly portfolioTotalLabel: Locator;
 
+  // Fund Cards tab — risk badges and sparklines
+  readonly riskBadges: Locator;
+  readonly sparklines: Locator;
+  readonly expenseRatios: Locator;
+
   constructor(private page: Page) {
     this.fundCards = page.locator('.grid > div').filter({ hasText: /Expense Ratio/ });
     this.selectedBadges = page.locator('text=✓ Selected');
@@ -21,6 +26,11 @@ export class InvestmentsPage {
     this.calculatorYAxisTicks = page.locator('.recharts-yAxis .recharts-cartesian-axis-tick-value');
     this.portfolioSliders = page.locator('input[type="range"]');
     this.portfolioTotalLabel = page.locator('text=/Total:/');
+
+    // Extended locators for Fund Cards positive coverage
+    this.riskBadges = page.locator('.grid > div').filter({ hasText: /Expense Ratio/ }).locator('text=/Low|Medium|High/');
+    this.sparklines = page.locator('.recharts-line');
+    this.expenseRatios = page.locator('text=/Expense Ratio/');
   }
 
   async navigate() {
@@ -33,6 +43,10 @@ export class InvestmentsPage {
 
   async searchFunds(term: string) {
     await this.searchInput.fill(term);
+  }
+
+  async clearSearch() {
+    await this.searchInput.clear();
   }
 
   async selectFundCard(index: number) {
