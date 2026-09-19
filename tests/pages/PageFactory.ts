@@ -23,4 +23,8 @@ export class PageFactory {
   settings(): SettingsPage {
     return new SettingsPage(this.page);
   }
+
+  budgets(): BudgetsPage {
+    return new BudgetsPage(this.page);
+  }
 }
