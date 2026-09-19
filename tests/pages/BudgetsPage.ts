@@ -73,7 +73,7 @@ export class BudgetsPage {
    */
   async editBudget(category: string, amount: number) {
     const spinner = this.budgetCard(category).getByRole('spinbutton');
-    await spinner.triple_click?.() ?? await spinner.click({ clickCount: 3 });
+    await spinner.click({ clickCount: 3 }); // select-all existing value
     await spinner.fill(String(amount));
     await spinner.dispatchEvent('change');
   }
