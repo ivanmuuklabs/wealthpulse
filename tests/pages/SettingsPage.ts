@@ -17,8 +17,8 @@ export class SettingsPage {
   constructor(private page: Page) {
     this.navButton = page.getByRole('button', { name: /settings/i });
 
-    // The Settings form uses labelled inputs
-    this.nameInput = page.getByLabel(/display name/i);
+    // The Settings form uses labelled inputs — label text in the app is "Full Name"
+    this.nameInput = page.getByLabel(/full name/i);
     this.emailInput = page.getByLabel(/email/i);
     this.currencySelect = page.getByLabel(/currency/i);
     this.saveButton = page.getByRole('button', { name: /save/i }).last();
