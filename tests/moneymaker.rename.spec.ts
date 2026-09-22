@@ -4,78 +4,72 @@ import { PageFactory } from './pages/PageFactory';
 /**
  * Regression tests for the Investments → MoneyMaker rename (PR #56).
  *
- * Changes covered:
- *  - Sidebar nav button label changed from "Investments" to "MoneyMaker"
- *  - InvestmentsTab <h2> heading changed from "Investments" to "MoneyMaker"
- *  - InvestmentsPage.navigate() now targets the "MoneyMaker" button
+ * The sidebar label and the tab heading were both changed from "Investments"
+ * to "MoneyMaker". These tests pin the new labels so any accidental revert or
+ * further rename is caught immediately — following the same pattern established
+ * by sidebar.navigation.spec.ts for the earlier "Dashboard → Charts" rename.
  */
 
-test.describe('MoneyMaker rename — sidebar & heading', () => {
+test.describe('MoneyMaker rename — sidebar label and tab heading', () => {
   test.beforeEach(async ({ page }) => {
     const factory = new PageFactory(page);
     await factory.login().goto();
     await factory.login().loginAsDemo();
-    // Wait until the app shell is ready
+    // Confirm we are inside the app before each test
     await expect(page.getByRole('heading', { name: 'Overview' })).toBeVisible();
   });
 
-  // ─── Happy-path tests ────────────────────────────────────────────────────────
-
-  test('HP-1 | sidebar shows a "MoneyMaker" nav button after login', async ({ page }) => {
-    // The renamed sidebar item must be immediately visible without any click
-    const moneyMakerButton = page.getByRole('button', { name: /moneymaker/i });
+  test('sidebar nav item is labelled "MoneyMaker", not "Investments"', async ({ page }) => {
+    // The renamed button must be present
+    const moneyMakerButton = page.getByRole('button', { name: 'MoneyMaker' });
     await expect(moneyMakerButton).toBeVisible();
+
+    // The old label must no longer exist in the sidebar
+    await expect(page.getByRole('button', { name: 'Investments' })).toHaveCount(0);
   });
 
-  test('HP-2 | clicking MoneyMaker in the sidebar loads the MoneyMaker heading', async ({ page }) => {
-    // Navigate using the page object (which already targets the renamed button)
-    const investmentsPage = new PageFactory(page).investments();
-    await investmentsPage.navigate();
+  test('clicking "MoneyMaker" in the sidebar navigates to the section', async ({ page }) => {
+    const factory = new PageFactory(page);
+    // Use the updated page-object navigate() which targets /moneymaker/i
+    await factory.investments().navigate();
 
-    // The tab heading must display "MoneyMaker", confirming both sidebar click
-    // and JSX heading were updated consistently
+    // The section heading should read "MoneyMaker"
     await expect(page.getByRole('heading', { name: 'MoneyMaker' })).toBeVisible();
   });
 
-  test('HP-3 | MoneyMaker sidebar button becomes active (highlighted) when the tab is open', async ({ page }) => {
-    const investmentsPage = new PageFactory(page).investments();
-    await investmentsPage.navigate();
+  test('MoneyMaker tab heading reads "MoneyMaker", not "Investments"', async ({ page }) => {
+    const factory = new PageFactory(page);
+    await factory.investments().navigate();
 
-    // Active sidebar items carry the emerald text highlight class
-    const moneyMakerButton = page.getByRole('button', { name: /moneymaker/i });
+    // The h2 inside the tab must show the new name
+    await expect(page.getByRole('heading', { name: 'MoneyMaker' })).toBeVisible();
+
+    // The old heading must not appear anywhere on the page
+    await expect(page.getByRole('heading', { name: 'Investments' })).toHaveCount(0);
+  });
+
+  test('MoneyMaker sidebar button becomes active after navigation', async ({ page }) => {
+    const factory = new PageFactory(page);
+    await factory.investments().navigate();
+
+    const moneyMakerButton = page.getByRole('button', { name: 'MoneyMaker' });
+    // Active sidebar items carry the emerald text class — same convention as Charts button
     await expect(moneyMakerButton).toHaveClass(/text-emerald-400/);
   });
 
-  // ─── Negative tests ──────────────────────────────────────────────────────────
-
-  test('NEG-1 | no sidebar button labelled "Investments" exists after the rename', async ({ page }) => {
-    // The old label must be completely absent — a stale "Investments" button would
-    // mean the rename did not propagate to the sidebar items array
-    await expect(page.getByRole('button', { name: 'Investments' })).toHaveCount(0);
-  });
-
-  test('NEG-2 | the MoneyMaker tab heading does NOT contain the old "Investments" text', async ({ page }) => {
-    const investmentsPage = new PageFactory(page).investments();
-    await investmentsPage.navigate();
-
-    // The <h2> must show "MoneyMaker"; the old "Investments" h2 must be gone
-    await expect(page.getByRole('heading', { name: 'Investments', exact: true })).toHaveCount(0);
-    await expect(page.getByRole('heading', { name: 'MoneyMaker' })).toBeVisible();
-  });
-
-  test('NEG-3 | "Investments" label stays absent even after navigating away and back', async ({ page }) => {
+  test('navigating away and back to MoneyMaker restores active state', async ({ page }) => {
     const factory = new PageFactory(page);
-    const investmentsPage = factory.investments();
+    await factory.investments().navigate();
 
-    // Navigate to MoneyMaker, then leave to another tab
-    await investmentsPage.navigate();
+    // Go to Expenses to deactivate MoneyMaker
     await page.getByRole('button', { name: 'Expenses' }).click();
 
-    // Return to MoneyMaker via the renamed button
-    await page.getByRole('button', { name: /moneymaker/i }).click();
+    const moneyMakerButton = page.getByRole('button', { name: 'MoneyMaker' });
+    await expect(moneyMakerButton).not.toHaveClass(/text-emerald-400/);
 
-    // After the round-trip the stale label must still not appear
-    await expect(page.getByRole('button', { name: 'Investments' })).toHaveCount(0);
+    // Navigate back — active class and heading should both be restored
+    await moneyMakerButton.click();
+    await expect(moneyMakerButton).toHaveClass(/text-emerald-400/);
     await expect(page.getByRole('heading', { name: 'MoneyMaker' })).toBeVisible();
   });
 });
