@@ -24,7 +24,7 @@ export class InvestmentsPage {
   }
 
   async navigate() {
-    await this.page.getByRole('button', { name: /investments/i }).click();
+    await this.page.getByRole('button', { name: /moneymaker/i }).click();
   }
 
   async goToSubTab(name: 'Fund Cards' | 'Compare' | 'Calculator' | 'Portfolio Builder') {
