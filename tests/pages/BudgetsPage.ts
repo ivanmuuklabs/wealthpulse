@@ -7,8 +7,14 @@ export class BudgetsPage {
   readonly transportRemaining: Locator;
   readonly transportBar: Locator;
   readonly transportBudgetInput: Locator;
+  /** Category search box on the Budgets tab. */
+  readonly searchInput: Locator;
+  /** Any budget card (each has a budget spinbutton). */
+  readonly budgetInputs: Locator;
 
   constructor(private page: Page) {
+    this.searchInput = page.getByPlaceholder('Search categories…');
+    this.budgetInputs = page.getByRole('spinbutton');
     this.transportCard = page
       .locator('div.rounded-2xl')
       .filter({ has: page.getByText('Transport', { exact: true }) })
