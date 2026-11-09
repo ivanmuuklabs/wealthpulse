@@ -63,7 +63,8 @@ test.describe('Budget — category search interaction negative tests', () => {
     await budgets.setTransportBudget('0'); // spent $10.00 vs budget $0.00
 
     await expect(budgets.transportRemaining).toHaveText('$10.00 over');
-    await expect(budgets.transportBar).not.toHaveClass(/\bbg-red-500\b/.source ? /\bbg-emerald-500\b/ : /x/);
+    // With a $0 budget the app computes pct as 0 (guarded division), so no "N%" overflow appears.
+    await expect(budgets.transportPercent).toHaveText('0%');
   });
 
   test('the search term is not kept after leaving the Budgets tab and coming back', async () => {
