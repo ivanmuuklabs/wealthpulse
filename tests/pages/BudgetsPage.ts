@@ -19,6 +19,15 @@ export class BudgetsPage {
     this.transportBudgetInput = this.transportCard.getByRole('spinbutton');
   }
 
+  /** Category search box on the Budgets tab. */
+  get searchInput(): Locator {
+    return this.page.getByPlaceholder('Search categories…');
+  }
+
+  async searchCategories(term: string) {
+    await this.searchInput.fill(term);
+  }
+
   async navigate() {
     await this.page.getByRole('button', { name: 'Budgets', exact: true }).click();
   }
