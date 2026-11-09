@@ -12,4 +12,12 @@ export class PageFactory {
   investments(): InvestmentsPage {
     return new InvestmentsPage(this.page);
   }
+
+  budgets(): BudgetsPage {
+    return new BudgetsPage(this.page);
+  }
+
+  expenses(): ExpensesPage {
+    return new ExpensesPage(this.page);
+  }
 }
